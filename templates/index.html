@@ -1,0 +1,41 @@
+{% extends "import.html" %}
+
+{% block content %}
+<style>
+    .main-container {
+        position: relative;
+        text-align: center;
+        color: white; /* Ensure text is readable on top of the image */
+        background: url("{{ url_for('static', filename='images/pic.jpg') }}") no-repeat center center;
+        background-size: cover;
+        height: 630px; /* Adjust height as needed */
+    }
+
+    .btn-container {
+        position: absolute;
+        bottom: 20px; /* Adjust vertical position */
+        left: 50%;
+        transform: translateX(-50%);
+        padding-bottom: 400px;
+    }
+
+    .btn-primary {
+        margin: 10px; /* Adjust button spacing */
+        align-items: center;
+        /* padding-bottom: 50px; */
+    }
+
+
+</style>
+
+<div class="main-container">
+    <div class="container">
+        <h2 style="padding-top: 50px; color: black; font-family:'Times New Roman', Times, serif; align-items: center; font-size: 50px;">Cancer Detection Using Deep Learning</h2>
+        <div class="btn-container">
+            <a class="btn btn-primary" href="{{ url_for('blood_cancer') }}">Blood Cancer Detection</a>
+            <a class="btn btn-primary" href="{{ url_for('lung_cancer') }}">Lung Cancer Detection</a>
+            <a class="btn btn-primary" href="{{ url_for('skin_cancer') }}">Skin Cancer Detection</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

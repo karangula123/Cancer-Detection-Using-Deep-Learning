@@ -1,0 +1,74 @@
+{% extends "import.html" %}
+
+{% block content %}
+<style>
+    body {
+        background: url("{{ url_for('static', filename='images/img.png') }}") no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    h2 {
+        padding-top: 30px;
+        font-size: 50px;
+    }
+
+    #upload-file-blood {
+        padding-top: 20px;
+    }
+    
+</style>
+<center>
+    <h2 style="font-family:'Times New Roman', Times, serif;">Blood Cancer Detection Using Deep Learning</h2>
+    <form id="upload-file-blood" method="post" enctype="multipart/form-data">
+        <h1 style="font-size: 15px;">Note: Upload Histopathological images (Tissue Images)</h1>
+        <input type="file" name="file" class="btn btn-success" id="imageUploadBlood" accept=".png, .jpg, .jpeg">
+    </form>
+
+    <div class="image-section-blood" style="display:none;">
+        <img id="imagePreviewBlood" class="img-responsive" src="#" style="width:300px;height:300px;"/><br><br>
+        <div>
+            <button type="button" class="btn btn-info btn-lg" id="btn-predict-blood">Predict!</button>
+        </div>
+    </div>
+    
+    <div class="loader" style="display:none;"></div>
+
+    <h3 id="result-blood">
+        <span></span>
+    </h3>
+</center><br><br>
+
+<script>
+    document.getElementById('imageUploadBlood').onchange = function (event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('imagePreviewBlood');
+            output.src = reader.result;
+            document.querySelector('.image-section-blood').style.display = 'block';
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    };
+
+    document.getElementById('btn-predict-blood').onclick = function() {
+        var form = document.getElementById('upload-file-blood');
+        var formData = new FormData(form);
+
+        fetch('/predict', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById('result-blood').querySelector('span').innerText = data.prediction;
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    };
+</script>
+{% endblock %}

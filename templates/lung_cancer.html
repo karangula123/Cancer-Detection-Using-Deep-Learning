@@ -1,0 +1,70 @@
+{% extends "import.html" %}
+
+{% block content %}
+<style>
+    body {
+        background: url("{{ url_for('static', filename='images/pic3.jpeg') }}") no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    h2 {
+        padding-top: 30px;
+        font-size: 50px;
+    }
+
+    #upload-file-lung {
+        padding-top: 20px;
+    }
+
+</style>
+
+<center>
+    <h2 style="color: black; font-family:'Times New Roman', Times, serif;">Lung Cancer Detection Using Deep Learning</h2>
+    <form id="upload-file-lung" method="post" enctype="multipart/form-data">
+        <h1 style="font-size: 15px;">Note: Upload Histopathological images (Tissue Images)</h1>
+        <input type="file" name="file" class="btn btn-success" id="imageUploadLung" accept=".png, .jpg, .jpeg">
+    </form>
+
+    <div class="image-section-lung" style="display:none;">
+        <img id="imagePreviewLung" class="img-responsive" src="#" style="width:300px;height:300px;"/><br><br>
+        <div>
+            <button type="button" class="btn btn-info btn-lg" id="btn-predict-lung">Predict!</button>
+        </div>
+    </div>
+
+    <div class="loader-lung" style="display:none;"></div>
+
+    <h3 id="result-lung">
+        <span></span>
+    </h3>
+</center><br><br>
+
+<script>
+    document.getElementById('imageUploadLung').onchange = function (event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('imagePreviewLung');
+            output.src = reader.result;
+            document.querySelector('.image-section-lung').style.display = 'block';
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    };
+
+    document.getElementById('btn-predict-lung').onclick = function() {
+        var form = document.getElementById('upload-file-lung');
+        var formData = new FormData(form);
+
+        fetch('/lung_cancer_predict', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('result-lung').querySelector('span').innerText = data.class_name;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    };
+</script>
+{% endblock %}
